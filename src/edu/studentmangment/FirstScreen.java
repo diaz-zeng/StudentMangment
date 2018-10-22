@@ -3,8 +3,7 @@ package edu.studentmangment;
 import edu.studentmangment.service.StudentService;
 
 import java.text.ParseException;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
 public class FirstScreen {
     private StudentService service;
@@ -30,7 +29,8 @@ public class FirstScreen {
             System.out.println("------2.修改学生------");
             System.out.println("------3.查找学生------");
             System.out.println("------4.删除学生------");
-            System.out.println("------5.退出系统------");
+            System.out.println("------5.浏览班级------");
+            System.out.println("------6.退出系统------");
             System.out.println("----------------------");
             System.out.print("请选择：");
             int userInput;
@@ -43,17 +43,27 @@ public class FirstScreen {
             scanner.nextLine();
             try {
                 switch (userInput) {
-                    case 1:
+                    case 1: {
                         addStudent();
                         break;
-                    case 2:
+                    }
+                    case 2: {
                         updateStudent();
-                    case 3:
+                        break;
+                    }
+                    case 3: {
                         getStudent();
                         break;
-                    case 4:
+                    }
+                    case 4: {
                         removeStudent();
+                        break;
+                    }
                     case 5: {
+                        showClass();
+                        break;
+                    }
+                    case 6: {
                         System.out.println("程序退出");
                         System.exit(0);
                     }
@@ -109,7 +119,7 @@ public class FirstScreen {
                 boolean gander;
                 if ("男".equals(datas[2]) || "女".equals(datas[2])) {
                     gander = datas[2].equals("男");
-                    StudentTemplet student = new StudentTemplet(datas[1], Integer.parseInt(datas[2]), Integer.parseInt(datas[0]), datas[4], gander);
+                    StudentTemplet student = new StudentTemplet(datas[1], Integer.parseInt(datas[3]), Integer.parseInt(datas[0]), datas[4], gander);
                     if (service.update(student)) {
                         System.out.println("修改成功");
                         System.out.println(student);
@@ -153,6 +163,31 @@ public class FirstScreen {
     }
 
     /**
+     * 查询班级下的所有学生
+     */
+    private void showClass() {
+        while (true) {
+            try {
+                System.out.println("请输入想要查看的班级信息");
+                String userInput = scanner.nextLine();
+                ArrayList<StudentTemplet> list = service.getClassInfo(userInput);
+                if (list.size() != 0) {
+                    Iterator<StudentTemplet> iterator = list.listIterator();
+                    while (iterator.hasNext()) {
+                        System.out.println(iterator.next());
+                    }
+                    break;
+                } else {
+                    System.out.println("该班级不存在或该班级没有学生");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
      * 删除学生信息
      */
     private void removeStudent() {
@@ -162,7 +197,7 @@ public class FirstScreen {
                 System.out.print("请输入学号以查找要删除的学生信息(#end退出)");
                 String sUserInput = scanner.nextLine();
                 if ("#end".equals(sUserInput))
-                    System.exit(0);
+                    break;
                 int userInput = Integer.parseInt(sUserInput);
                 if (!(null == service.get(userInput))) {
                     System.out.println(service.get(userInput));

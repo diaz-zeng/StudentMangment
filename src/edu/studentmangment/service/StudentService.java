@@ -2,8 +2,7 @@ package edu.studentmangment.service;
 
 import edu.studentmangment.StudentTemplet;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * 学生服务类，单例实现
@@ -85,5 +84,27 @@ public class StudentService {
      */
     public StudentTemplet get(Integer id) {
         return students.get(id);
+    }
+
+
+    /**
+     * 获取一个ArrayList，里面包含了一个班级所有的学生信息。
+     *
+     * @param classID 要查找的班级
+     * @return 班级下所有学生的信息
+     */
+    public ArrayList<StudentTemplet> getClassInfo(String classID)
+    {
+       Iterator<StudentTemplet> iterator = students.values().iterator();
+       ArrayList<StudentTemplet> results = new ArrayList<>();
+       while (iterator.hasNext())
+       {
+           StudentTemplet temp = iterator.next();
+           if(classID.equals(temp.getClassID()))
+           {
+               results.add(temp);
+           }
+       }
+       return results;
     }
 }
